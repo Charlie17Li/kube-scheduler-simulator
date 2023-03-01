@@ -27,3 +27,7 @@ build:
 .PHONY: start
 start: build
 	./hack/start_simulator.sh
+
+.PHONY: sched
+sched:
+	go build -o ./bin/scheduler ./main.go
