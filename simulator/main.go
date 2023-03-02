@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"golang.org/x/xerrors"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
@@ -17,12 +18,13 @@ func main() {
 }
 
 func startScheduler() error {
+	path := flag.String("kubeconfig", "/etc/kubernetes/scheduler.conf", "kubeconfig")
 	dsc, err := config.DefaultSchedulerConfig()
 	if err != nil {
 		return xerrors.Errorf("get defaultScheduler Config: %w", err)
 	}
 	// must be in cluster
-	restCfg, err := clientcmd.BuildConfigFromFlags("", "")
+	restCfg, err := clientcmd.BuildConfigFromFlags("", *path)
 	if err != nil {
 		panic(err.Error())
 	}
