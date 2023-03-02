@@ -12,11 +12,11 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -v -o ./bin/scheduler main.go
+RUN go build -v -o ./bin/kube-scheduler main.go
 
 FROM alpine:3.14.0
 
-COPY --from=build-env /go/src/simulator/bin/scheduler /scheduler
-RUN chmod a+x /scheduler
+COPY --from=build-env /go/src/simulator/bin/kube-scheduler /bin/kube-scheduler
+RUN chmod a+x /bin/kube-scheduler
 
-CMD ["/scheduler"]
+CMD ["/kube-scheduler"]
