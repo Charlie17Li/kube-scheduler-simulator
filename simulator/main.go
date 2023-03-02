@@ -4,8 +4,9 @@ import (
 	"golang.org/x/xerrors"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	"sigs.k8s.io/kube-scheduler-simulator/simulator/config"
+
 	"sigs.k8s.io/kube-scheduler-simulator/simulator/scheduler"
+	"sigs.k8s.io/kube-scheduler-simulator/simulator/scheduler/config"
 )
 
 // entry point.
@@ -16,9 +17,9 @@ func main() {
 }
 
 func startScheduler() error {
-	cfg, err := config.NewConfig()
+	dsc, err := config.DefaultSchedulerConfig()
 	if err != nil {
-		return xerrors.Errorf("get config: %w", err)
+		return xerrors.Errorf("get defaultScheduler Config: %w", err)
 	}
 	// must be in cluster
 	restCfg, err := clientcmd.BuildConfigFromFlags("", "")
@@ -31,8 +32,8 @@ func startScheduler() error {
 		panic(err.Error())
 	}
 
-	svc := scheduler.NewSchedulerService(client, restCfg, cfg.InitialSchedulerCfg, false)
-	if err = svc.StartScheduler(cfg.InitialSchedulerCfg); err != nil {
+	svc := scheduler.NewSchedulerService(client, restCfg, dsc, false)
+	if err = svc.StartScheduler(dsc); err != nil {
 		return xerrors.Errorf("start scheduler: %w", err)
 	}
 
