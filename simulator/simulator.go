@@ -10,8 +10,6 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"golang.org/x/xerrors"
 	clientset "k8s.io/client-go/kubernetes"
-	"k8s.io/klog/v2"
-
 	"sigs.k8s.io/kube-scheduler-simulator/simulator/config"
 	"sigs.k8s.io/kube-scheduler-simulator/simulator/controller"
 	"sigs.k8s.io/kube-scheduler-simulator/simulator/k8sapiserver"
@@ -19,12 +17,12 @@ import (
 	"sigs.k8s.io/kube-scheduler-simulator/simulator/server/di"
 )
 
-// entry point.
-func main() {
-	if err := startSimulator(); err != nil {
-		klog.Fatalf("failed with error on running simulator: %+v", err)
-	}
-}
+//// entry point.
+//func main() {
+//	if err := startSimulator(); err != nil {
+//		klog.Fatalf("failed with error on running simulator: %+v", err)
+//	}
+//}
 
 // startSimulator starts simulator and needed k8s components.
 //

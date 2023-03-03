@@ -5,6 +5,9 @@ import (
 	"golang.org/x/xerrors"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"sigs.k8s.io/kube-scheduler-simulator/simulator/scheduler"
 	"sigs.k8s.io/kube-scheduler-simulator/simulator/scheduler/config"
@@ -19,6 +22,7 @@ func main() {
 
 func startScheduler() error {
 	path := flag.String("kubeconfig", "/etc/kubernetes/scheduler.conf", "kubeconfig")
+	flag.Parse()
 	dsc, err := config.DefaultSchedulerConfig()
 	if err != nil {
 		return xerrors.Errorf("get defaultScheduler Config: %w", err)
@@ -38,6 +42,11 @@ func startScheduler() error {
 	if err = svc.StartScheduler(dsc); err != nil {
 		return xerrors.Errorf("start scheduler: %w", err)
 	}
+
+	// wait the signal
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, os.Interrupt)
+	<-quit
 
 	return nil
 }
